@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="container">
+
+    <label for="tables">Choose a table :</label>
+    <select id="tables" name="tablelist" form="tableForm">
+        <option>Course</option>
+        <option>Department</option>
+        <option>Faculty</option>
+        <option>Inventory</option>
+        <option>Student</option>
+    </select>
+    <form method="get" action="/see/query" id="tableForm">
+        <input type="submit" id="showBtn">
+    </form>
+
+    <table>
+        <h1><%= name%></h1>
+        <tr>
+            <% for (let i = 0; i < columns.length; i ++) { %>
+                <th><%= columns[i].name %></th>
+            <% } %>
+        </tr>
+        <% for (let i = 0; i < someData.length; i ++ ) { %>
+            <tr>
+                <% for (let info in someData[i] ) { %>
+                    <% if (info === 'DOB') { %>
+                        <% if(someData[i][info] !== null) { %>
+                        <td><%= someData[i][info].toDateString()%></td>
+                        <% } else { %>
+                            <td></td>
+                            <% } %>
+                    <% } else { %>
+                        <td><%= someData[i][info]%></td>
+                        <% } %>
+                <% } %>
+            </tr>
+        <% } %>
+    </table>
+
+
+</div>
+<!--<script src="main.js"></script>-->
+</body>
+</html>
