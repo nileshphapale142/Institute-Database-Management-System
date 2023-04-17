@@ -13,7 +13,7 @@
         <select id="tables" name="tableList" form="tableForm">
             <option>Course</option>
             <option>Department</option>
-            <option>Faculty</option>
+            <option>Staff</option>
             <option>Inventory</option>
             <option>Student</option>
         </select>
@@ -29,33 +29,16 @@
         <form class="insertForm" action='<%= '/insert/table?name=' + temp%>'  method="POST">
             <% for (let i = 0; i < columns.length; i ++) { %>
                 <label for='<%= columns[i].name%>'></label>
-                <input type="text" name='<%= columns[i].name%>' placeholder='<%=columns[i].name%>'>
+                <% if (columns[i].name === 'DOB') { %>
+                    <input type="date" name='<%= columns[i].name%>' placeholder='<%=columns[i].name%>'>
+                <% } else { %>
+                    <input type="text" name='<%= columns[i].name%>' placeholder='<%=columns[i].name%>'>
+                <% } %>
             <% } %>
                 <button type="submit">Submit</button>
         </form>
     </div>
     <% } %>
-
-<!--    <form action="/insert/query/info" method="POST">-->
-<!--        <div class="form-group">-->
-<!--            <label for="firstName">First Name</label>-->
-<!--            <input type="text" class="form-control col-lg-9" id="f_name" aria-describedby="emailHelp" placeholder="Enter first name" name="f_name">-->
-<!--        </div>-->
-<!--        <div class="form-group">-->
-<!--            <label for="lastName">Last Name</label>-->
-<!--            <input type="text" class="form-control col-lg-9" id="l_name" aria-describedby="emailHelp" placeholder="Enter last name" name="l_name">-->
-<!--        </div>-->
-<!--        <div class="form-group">-->
-<!--            <label for="exampleInputEmail1">Email address</label>-->
-<!--            <input type="email" class="form-control col-lg-9" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" placeholder="Enter email">-->
-<!--        </div>-->
-<!--        <div class="form-group">-->
-<!--            <label for="exampleInputEmail1">Message</label>-->
-<!--            <textarea name="message" class="form-control col-lg-9"></textarea>-->
-<!--        </div>-->
-<!--        <button type="submit" class="btn btn-primary">Submit</button>-->
-<!--    </form>-->
-
 
 </div>
 </body>
