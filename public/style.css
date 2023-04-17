@@ -18,8 +18,29 @@
     color: white;
     font-weight: bold;
     line-height: 25px;
+    margin-bottom: 2%;
 }
 
 table, td, th{
     border: 1px solid;
+}
+
+.container_insert, .tables_list{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tables_list {
+    margin-bottom: 2%;
+}
+
+.insertForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.insertForm label input {
+    margin-bottom: 1%;
 }

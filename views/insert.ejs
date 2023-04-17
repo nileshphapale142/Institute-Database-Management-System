@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="container_insert">
+    <div class="tables_list">
+        <label for="tables">Choose a table :</label>
+        <select id="tables" name="tableList" form="tableForm">
+            <option>Course</option>
+            <option>Department</option>
+            <option>Faculty</option>
+            <option>Inventory</option>
+            <option>Student</option>
+        </select>
+        <form method="post" action="/insert" id="tableForm">
+            <input type="submit">
+        </form>
+    </div>
+
+    <% if (temp.length !== 0) { %>
+    <h1>Enter the <%= temp %> information below</h1>
+    <div class="insert_form">
+        <label for="insertForm"></label>
+        <form class="insertForm" action='<%= '/insert/table?name=' + temp%>'  method="POST">
+            <% for (let i = 0; i < columns.length; i ++) { %>
+                <label for='<%= columns[i].name%>'></label>
+                <input type="text" name='<%= columns[i].name%>' placeholder='<%=columns[i].name%>'>
+            <% } %>
+                <button type="submit">Submit</button>
+        </form>
+    </div>
+    <% } %>
+
+<!--    <form action="/insert/query/info" method="POST">-->
+<!--        <div class="form-group">-->
+<!--            <label for="firstName">First Name</label>-->
+<!--            <input type="text" class="form-control col-lg-9" id="f_name" aria-describedby="emailHelp" placeholder="Enter first name" name="f_name">-->
+<!--        </div>-->
+<!--        <div class="form-group">-->
+<!--            <label for="lastName">Last Name</label>-->
+<!--            <input type="text" class="form-control col-lg-9" id="l_name" aria-describedby="emailHelp" placeholder="Enter last name" name="l_name">-->
+<!--        </div>-->
+<!--        <div class="form-group">-->
+<!--            <label for="exampleInputEmail1">Email address</label>-->
+<!--            <input type="email" class="form-control col-lg-9" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" placeholder="Enter email">-->
+<!--        </div>-->
+<!--        <div class="form-group">-->
+<!--            <label for="exampleInputEmail1">Message</label>-->
+<!--            <textarea name="message" class="form-control col-lg-9"></textarea>-->
+<!--        </div>-->
+<!--        <button type="submit" class="btn btn-primary">Submit</button>-->
+<!--    </form>-->
+
+
+</div>
+</body>
+</html>
