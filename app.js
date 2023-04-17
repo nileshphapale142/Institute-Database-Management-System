@@ -12,7 +12,6 @@ const routers = express.Router()
 const app = express()
 
 
-
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
