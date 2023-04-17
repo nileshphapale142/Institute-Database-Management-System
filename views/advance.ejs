@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Advance</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="container_advance">
+    <label for="sqlQ">Type SQL Query Below : </label>
+    <textarea form="tableForm_advance" name="sqlQuery" id="sqlQ" cols="35" rows="10" class="sqlQ"></textarea>
+
+    <form method="get" action="/advance/sql" id="tableForm_advance" class="tableform_advance">
+        <input type="submit" id="showBtn">
+    </form>
+
+    <table>
+        <h1><%= message%></h1>
+        <tr>
+            <% for (let i = 0; i < columns.length; i ++) { %>
+                <th><%= columns[i].name %></th>
+            <% } %>
+        </tr>
+        <% for (let i = 0; i < someData.length; i ++ ) { %>
+            <tr>
+                <% for (let info in someData[i] ) { %>
+                    <% if (info === 'DOB') { %>
+                        <% if(someData[i][info] !== null) { %>
+                            <td><%= someData[i][info].toDateString()%></td>
+                        <% } else { %>
+                            <td></td>
+                        <% } %>
+                    <% } else { %>
+                        <td><%= someData[i][info]%></td>
+                    <% } %>
+                <% } %>
+            </tr>
+        <% } %>
+    </table>
+
+</div>
+</body>
+</html>

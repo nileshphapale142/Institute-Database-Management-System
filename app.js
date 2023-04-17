@@ -161,7 +161,33 @@ app.get('/see/query', (req, res) => {
 })
 
 app.get('/advance', (req, res) => {
-    res.status(200).send('Want advance option?')
+    res.status(200).render('advance', {
+        message: '',
+        columns: '',
+        someData: ''
+    })
+})
+
+app.get('/advance/sql', (req, res) => {
+    console.log(req.query)
+    const query = req.query.sqlQuery
+    connection.query(query, (err, rows, fields) => {
+        // console.log(rows)
+        if (err) {
+            const errorMsg = err.message.toString().split(' ')
+            res.status(200).render('advance', {
+                message: 'Error :>' + err.message,
+                columns: '',
+                someData: ''
+            })
+        } else {
+            res.status(200).render('advance', {
+                message: 'Result of \'' + query + '\':',
+                columns: fields,
+                someData: rows
+            })
+        }
+    })
 })
 
 app.get('/about', (req, res) => {
