@@ -5,51 +5,94 @@
     align-items: center;
 }
 
+body {
+    background-color: #f8bfb6;
+}
+
+h1 {
+    margin-top: 3%;
+    color: black;
+}
+
 .container a {
     display: block;
     width: 20%;
     height: 25px;
     text-decoration: none;
     background: linear-gradient(to bottom, #eed2fa, #d68df7);
-    /*background: #d68df7;*/
     padding: 10px;
     text-align: center;
     border-radius: 5px;
     color: white;
     font-weight: bold;
     line-height: 25px;
-    margin-bottom: 2%;
 }
 
-table, td, th{
-    border: 1px solid;
+label {
+    color: black;
+    margin-bottom: 0.5%;
+    font-size: 35px;
 }
 
-.container_insert, .tables_list, .container_advance{
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
+select, .showBtn {
+    width: 100%;
+    min-width: 15ch;
+    max-width: 30ch;
+    border: 1px solid var(--select-border);
+    border-radius: 0.25em;
+    padding: 0.25em 0.5em;
+    font-size: 1.25rem;
+    cursor: pointer;
+    line-height: 1.1;
+    background-color: #fff;
+    background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
 }
 
-.tables_list {
-    margin-bottom: 2%;
+.showBtn {
+    margin-top: 3%;
+    width: 50%;
 }
 
-.insertForm {
-    display: flex;
-    flex-direction: column;
+.showBtn:hover {
+    background: #1f91ff;
+    color: #fff;
+    border: 1px solid #eee;
 }
 
-.tableform_advance {
-    display: flex;
-    flex-direction: column;
+table {
+    border-collapse: collapse;
+    color: #333;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    text-align: left;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    margin: 1% auto;
 }
 
-.sqlQ {
-    margin-bottom: 1%;
+table tr td {
+    background-color: #fff;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
 }
 
-.insertForm label input {
-    margin-bottom: 1%;
+table tr th {
+    background-color: #046fd6;
+    color: #fff;
+    font-weight: bold;
+    padding: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #ccc;
+}
+
+table tr:nth-child(even) td {
+    background-color: #f2f2f2;
+}
+
+table tr:hover td {
+    background-color: #78bafa;
 }

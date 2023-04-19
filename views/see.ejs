@@ -7,16 +7,17 @@
 </head>
 <body>
 <div class="container">
-    <label for="tables">Choose a table :</label>
-    <select id="tables" name="tablelist" form="tableForm">
+
+    <label for="tables">Choose a Table</label>
+    <select class="dropdown" id="tables" name="tablelist" form="tableForm">
         <option>Course</option>
         <option>Department</option>
-        <option>Staff</option>
+        <option>Faculty</option>
         <option>Inventory</option>
         <option>Student</option>
     </select>
     <form method="get" action="/see/query" id="tableForm">
-        <input type="submit" id="showBtn">
+        <input type="submit" id="showBtn" class="showBtn">
     </form>
 
     <table>
