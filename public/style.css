@@ -6,11 +6,12 @@
 }
 
 body {
-    background-color: #1f1d1d;
+    background-color: #f8bfb6;
 }
 
 h1 {
-    color: #08fcd9;
+    margin-top: 3%;
+    color: black;
 }
 
 .container a {
@@ -28,9 +29,9 @@ h1 {
 }
 
 label {
-    color: #08fcd9;
+    color: black;
     margin-bottom: 0.5%;
-    font-size: 40px;
+    font-size: 35px;
 }
 
 select, .showBtn {
@@ -60,7 +61,6 @@ select, .showBtn {
 
 table {
     border-collapse: collapse;
-    /*width: 100%;*/
     color: #333;
     font-family: Arial, sans-serif;
     font-size: 14px;
@@ -68,7 +68,7 @@ table {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    margin: 50px auto;
+    margin: 1% auto;
 }
 
 table tr td {
