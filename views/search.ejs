@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="container_insert">
+    <div class="tables_list">
+        <label for="tables">Search into :</label>
+        <select id="tables" name="tableList" form="tableForm">
+            <option>Course</option>
+            <option>Department</option>
+            <option>Staff</option>
+            <option>Inventory</option>
+            <option>Student</option>
+        </select>
+        <form method="post" action="/search" id="tableForm">
+            <input type="submit">
+        </form>
+    </div>
+
+    <% if (temp.length !== 0) { %>
+        <div class="insert_form">
+            <label for="attributes">Search by : </label>
+            <select id="attributes" name="attr" form="selectionForm">
+                <% for (let i = 0; i < columns.length; i ++ ) { %>
+                    <option><%= columns[i].Field%></option>
+                <% } %>
+            </select>
+            <form method="post" action='<%= "/search/table?name=" + temp + '&attr=' + attribute%>' id="selectionForm">
+                <input type="submit">
+            </form>
+
+            <% if (attribute !== '') { %>
+                <label for="<%= attribute%>">Enter <%= attribute%></label>
+                <% if (attribute === 'DOB')  { %>
+                    <input type="date"  name='value' id="<%= attribute%>" placeholder="<%= attribute%>" form="selectionForm">
+                <% } else { %>
+                    <input name='value' id="<%= attribute%>" placeholder="<%= attribute%>" form="selectionForm">
+                    <% } %>
+                    <input type="submit"  form="selectionForm">
+            <% } %>
+        </div>
+    <% } %>
+
+    <% if (message !== '') { %>
+        <table>
+            <h1><%= message%></h1>
+            <tr>
+                <% for (let i = 0; i < attrs.length; i ++) { %>
+                    <th><%= attrs[i].name %></th>
+                <% } %>
+            </tr>
+            <% for (let i = 0; i < someData.length; i ++ ) { %>
+                <tr>
+                    <% for (let info in someData[i] ) { %>
+                        <% if (info === 'DOB') { %>
+                            <% if(someData[i][info] !== null) { %>
+                                <td><%= someData[i][info].toDateString()%></td>
+                            <% } else { %>
+                                <td></td>
+                            <% } %>
+                        <% } else { %>
+                            <td><%= someData[i][info]%></td>
+                        <% } %>
+                    <% } %>
+                </tr>
+            <% } %>
+        </table>
+    <% } %>
+</div>
+</body>
+</html>

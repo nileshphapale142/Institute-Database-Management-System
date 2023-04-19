@@ -8,6 +8,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const {NULL} = require("mysql/lib/protocol/constants/types");
 const Errors = require("mysql/lib/protocol/constants/errors");
+const {isEmpty} = require("lodash");
 
 const routers = express.Router()
 
@@ -136,6 +137,145 @@ app.post('/insert/table', async (req, res) => {
                 res.status(200).send('Successful')
         })
     })
+})
+
+app.get('/delete', (req, res) => {
+    res.status(200).render('delete', {
+        temp: '',
+        columns: '',
+        error: ''
+    })
+})
+
+app.post('/delete', (req, res) => {
+    console.log(req.body)
+    const table = req.body.tableList
+
+    connection.query('desc ' + table, (err, rows, fields) => {
+        if (err) res.send('Error 404: Error while deleting')
+        else {
+            let primaryKeys = []
+            for (let i = 0; i < rows.length; i ++) {
+                if (rows[i].Key === 'PRI')
+                    primaryKeys.push({
+                        name: rows[i].Field
+                    })
+            }
+            res.status(200).render('delete', {
+                temp: table,
+                columns: primaryKeys,
+                error: ''
+            })
+        }
+    })
+})
+
+app.post('/delete/table', (req, res) => {
+
+    //TODO: Checking for valid primary key values
+    //TODO: Checking if key value doesn't exist
+    //TODO: Cascading on deletion if exists
+
+    const table = req.query.name
+    const keyVal = req.body
+    console.log(table)
+    console.log(keyVal)
+    let query = 'delete from ' + table + ' where '
+    for (let key in keyVal) {
+        query += key + ' = \'' + keyVal[key] + '\' and '
+    }
+    query = query.slice(0, query.length - 4)
+    console.log(query)
+
+    connection.query(query, (err, rows, fields) => {
+        if (err) {
+            console.log(err)
+            res.status(200).render('delete', {
+                error: 'Some error occurred while deleting'
+            })
+        }
+        else res.redirect('/see/query?tablelist=' + table)
+    })
+})
+
+app.get('/search', (req, res) => {
+    res.status(200).render('search', {
+        temp: '',
+        columns: '',
+        attributes: '',
+        message: '',
+        attrs: '',
+        someData: ''
+    })
+})
+
+app.post('/search', (req, res) => {
+    console.log(req.body)
+    console.log(req.query)
+    const table = req.body.tableList
+
+    connection.query('desc ' + table, (err, rows, fields) => {
+        if (err) res.send('Error 404: Error while deleting')
+        else {
+            res.status(200).render('search', {
+                temp: table,
+                columns: rows,
+                attribute: '',
+                message: '',
+                attrs: '',
+                someData: ''
+            })
+        }
+    })
+})
+
+app.post('/search/table', (req, res) => {
+
+    //TODO: Checking for incompatible data
+    const table = req.query.name
+    const qAttr = req.query.attr
+    const {value, attr} = req.body
+    // console.log('req.query :',req.query)
+    // console.log('req.body :',req.body)
+
+    if (qAttr === '') {
+        connection.query('desc ' + table, (err, rows, fields) => {
+            res.status(200).render('search', {
+                temp: table,
+                columns: rows,
+                attribute: attr,
+                message: '',
+                attrs: '',
+                someData: ''
+            })
+        })
+    } else {
+        let query = 'select * from ' + table + ' where ' + qAttr + ' = \'' + value + '\''
+
+        connection.query(query, (err, rows, fields) => {
+            if (err) res.send('Some error')
+            else if(isEmpty(rows)) {
+                res.status(200).render('search', {
+                    temp: '',
+                    columns: '',
+                    attribute: '',
+                    message: 'Nothing found',
+                    attrs: '',
+                    someData: ''
+                })
+            } else {
+                res.status(200).render('search', {
+                    temp: '',
+                    columns: '',
+                    attribute: '',
+                    message: 'Result of search',
+                    attrs: fields,
+                    someData: rows
+                })
+            }
+        })
+        // res.status(200).send('Got')
+    }
 })
 
 app.get('/see', (req, res) => {

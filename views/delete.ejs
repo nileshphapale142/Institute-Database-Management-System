@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="container_insert">
+    <div class="tables_list">
+        <label for="tables">Delete from table :</label>
+        <select id="tables" name="tableList" form="tableForm">
+            <option>Course</option>
+            <option>Department</option>
+            <option>Staff</option>
+            <option>Inventory</option>
+            <option>Student</option>
+        </select>
+        <form method="post" action="/delete" id="tableForm">
+            <input type="submit">
+        </form>
+    </div>
+
+    <% if (temp.length !== 0) { %>
+        <h1>Enter the information below to delete : </h1>
+        <div class="insert_form">
+            <label for="insertForm"></label>
+            <form class="insertForm" action='<%= '/delete/table?name=' + temp%>'  method="POST">
+                <% for (let i = 0; i < columns.length; i ++) { %>
+                    <label for='<%= columns[i].name%>'></label>
+                    <% if (columns[i].name === 'DOB') { %>
+                        <input type="date" name='<%= columns[i].name%>' placeholder='<%=columns[i].name%>'>
+                    <% } else { %>
+                        <input type="text" name='<%= columns[i].name%>' placeholder='<%=columns[i].name%>'>
+                    <% } %>
+                <% } %>
+                <button type="submit">Submit</button>
+            </form>
+
+            <h3><%= error %></h3>
+        </div>
+    <% } %>
+
+</div>
+</body>
+</html>
