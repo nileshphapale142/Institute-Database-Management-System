@@ -8,7 +8,10 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const {NULL} = require("mysql/lib/protocol/constants/types");
 const Errors = require("mysql/lib/protocol/constants/errors");
+const _ = require("lodash");
 const {isEmpty} = require("lodash");
+const hljs = require('highlight.js')
+
 
 const routers = express.Router()
 
@@ -90,10 +93,8 @@ app.post('/insert/table', async (req, res) => {
         if (err) console.log('some error')
 
         let insertArray = []
-        let primaryKey = []
 
         for (let i = 0; i < rows.length; i ++) {
-
             const type = rows[i].Type.toString().slice(0, 3).toString()
             if (type === 'int') {
                 if (isNaN(parseInt(tuple[rows[i].Field]))) {
@@ -133,11 +134,165 @@ app.post('/insert/table', async (req, res) => {
                     res.status(200).send(msg)
                 }
                 else res.status(200).send('Error 404: Problem while inserting data!')
-            } else
-                res.status(200).send('Successful')
+            } else {
+                connection.query('select * from ' + table, (er, row, col) => {
+                    let no = -1
+                    console.log(row)
+                    console.log(insertArray)
+                    for (let i = 0; i < row.length; i ++) {
+                        let j = 0;
+                        let found = true
+                        for (let info in row[i]) {
+                            console.log(row[i][info], '  ', insertArray[j])
+                            if (info === 'DOB' && row[i][info] !== null) {
+                                console.log(row[i][info].toDateString(), '  ', insertArray[j])
+                                if (Date.parse(row[i][info].toDateString()) !== Date.parse(new Date(insertArray[j]).toDateString())) {
+                                    found = false
+                                    break
+                                }
+                            } else if (row[i][info] !== insertArray[j]) {
+                                found = false
+                                break
+                            }
+                            j ++
+                        }
+                        if (found) {
+                            no = i
+                            break
+                        }
+                    }
+                    console.log(no)
+                    res.status(200).render('see', {
+                        name: table.toString().toLocaleUpperCase(),
+                        someData: row,
+                        columns: col,
+                        highlightNo: no
+                    })
+                })
+            }
         })
     })
 })
+
+app.get('/update', (req, res) => {
+    res.status(200).render('update', {
+        temp: '',
+        attribute: '',
+        column:''
+    })
+})
+
+app.post('/update', (req, res) => {
+    console.log(req.body)
+    const table = req.body.tableList
+
+    connection.query('desc ' + table, (err, rows, fields) => {
+        if (err) throw err
+        let primaryKeys = []
+        let nonPrimaryKeys = []
+        for (let i = 0; i < rows.length; i ++) {
+            if (rows[i].Key === 'PRI'){
+                primaryKeys.push({
+                    name: rows[i].Field
+                })
+            }else{
+                nonPrimaryKeys.push({
+                    name: rows[i].Field
+                })
+            }
+        }
+        res.status(200).render('update', {
+            temp: table,
+            columns: nonPrimaryKeys,
+            column: primaryKeys,
+            attribute:''
+        })
+    })
+})
+
+
+app.post('/update/table', (req, res) => {
+    const table = req.query.name;
+    const tables_col = req.query.attr;
+    const {value , attr} = req.body;
+
+    if(tables_col === ''){
+        connection.query('desc ' + table, (err, rows, fields) => {
+            let primaryKeys = []
+            let nonPrimaryKeys = []
+            for (let i = 0; i < rows.length; i ++) {
+                if (rows[i].Key === 'PRI'){
+                    primaryKeys.push({
+                        name: rows[i].Field
+                    })
+                }else{
+                    nonPrimaryKeys.push({
+                        name: rows[i].Field
+                    })
+                }
+            }
+            res.status(200).render('update', {
+                temp: table,
+                columns: nonPrimaryKeys,
+                column: primaryKeys,
+                attribute: attr
+            })
+        })
+    }else{
+
+        const temp = req.body;
+
+        let primaryKeys = []
+        for (let key in temp) {
+            if (key !== 'attr' && key !== 'value')
+                primaryKeys.push(key)
+        }
+
+        const values = [value]
+
+        let query = 'update ' + table + ' SET ' + tables_col + ' =?  where ';
+        for (let i = 0; i < primaryKeys.length; i++) {
+            query += primaryKeys[i].toString() + '=? and'
+            values.push(temp[primaryKeys[i]])
+        }
+        query = query.slice(0, query.length - 4)
+
+        connection.query(query, values, (err, row, field) => {
+            if (err) {
+                console.log(err);
+                res.send('An error occurred while updating')
+            } else {
+                    console.log('record is updated');
+
+                connection.query('select * from ' + table, (er, rows, fields) => {
+                    let no = -1
+                    for (let i = 0; i < rows.length; i++) {
+                        let found = true
+                        for (let j = 0; j < primaryKeys.length; j++) {
+                            if (rows[i][primaryKeys[j]].toString() !== req.body[primaryKeys[j]].toString()) {
+                                found = false
+                                break
+                            }
+                            if (found) {
+                                no = i
+                                break
+                            }
+                        }
+                    }
+
+                    res.status(200).render('see', {
+                        name: table.toString().toLocaleUpperCase(),
+                        someData: rows,
+                        columns: fields,
+                        highlightNo: no
+                    })
+                })
+            }
+        })
+    }
+
+});
+
 
 app.get('/delete', (req, res) => {
     res.status(200).render('delete', {
@@ -148,7 +303,7 @@ app.get('/delete', (req, res) => {
 })
 
 app.post('/delete', (req, res) => {
-    console.log(req.body)
+    // console.log(req.body)
     const table = req.body.tableList
 
     connection.query('desc ' + table, (err, rows, fields) => {
@@ -178,14 +333,14 @@ app.post('/delete/table', (req, res) => {
 
     const table = req.query.name
     const keyVal = req.body
-    console.log(table)
-    console.log(keyVal)
+    // console.log(table)
+    // console.log(keyVal)
     let query = 'delete from ' + table + ' where '
     for (let key in keyVal) {
         query += key + ' = \'' + keyVal[key] + '\' and '
     }
     query = query.slice(0, query.length - 4)
-    console.log(query)
+    // console.log(query)
 
     connection.query(query, (err, rows, fields) => {
         if (err) {
@@ -210,8 +365,8 @@ app.get('/search', (req, res) => {
 })
 
 app.post('/search', (req, res) => {
-    console.log(req.body)
-    console.log(req.query)
+    // console.log(req.body)
+    // console.log(req.query)
     const table = req.body.tableList
 
     connection.query('desc ' + table, (err, rows, fields) => {
@@ -270,12 +425,34 @@ app.post('/search/table', (req, res) => {
                     attribute: '',
                     message: 'Result of search',
                     attrs: fields,
-                    someData: rows
+                    someData: rows,
+                    name: table,
+                    searchAttribute: qAttr,
+                    searchValue:value
                 })
             }
         })
-        // res.status(200).send('Got')
     }
+})
+
+app.post('/search/sort', (req, res) => {
+    const {table, attr, value} = req.query
+    // console.log(req.query)
+    connection.query('select * from ' + table + ' where ' + attr + ' = \'' + value + '\''  + ' order by ' + req.body.sortBy + ' ' + req.body.sortByOrder, (err, rows, fields) => {
+        if (err) throw err
+        res.status(200).render('search', {
+            temp: '',
+            columns: '',
+            attribute: '',
+            message: 'Result of search',
+            attrs: fields,
+            someData: rows,
+            name: table,
+            searchAttribute: attr,
+            searchValue:value,
+            highlightNo: -1
+        })
+    })
 })
 
 app.get('/see', (req, res) => {
@@ -295,7 +472,22 @@ app.get('/see/query', (req, res) => {
         res.status(200).render('see', {
             name: table.toString().toLocaleUpperCase(),
             someData: rows,
-            columns: fields
+            columns: fields,
+            highlightNo: -1
+        })
+    })
+})
+
+app.post('/see/sort', (req, res) => {
+    const table = req.query.table
+
+    connection.query('select * from ' + table + ' order by ' + req.body.sortBy + ' ' + req.body.sortByOrder, (err, rows, fields) => {
+        if (err) throw err
+        res.status(200).render('see', {
+            name: table.toString().toLocaleUpperCase(),
+            someData: rows,
+            columns: fields,
+            highlightNo: -1
         })
     })
 })
@@ -309,23 +501,28 @@ app.get('/advance', (req, res) => {
 })
 
 app.get('/advance/sql', (req, res) => {
-    console.log(req.query)
     const query = req.query.sqlQuery
     connection.query(query, (err, rows, fields) => {
-        // console.log(rows)
         if (err) {
-            const errorMsg = err.message.toString().split(' ')
             res.status(200).render('advance', {
                 message: 'Error :>' + err.message,
                 columns: '',
                 someData: ''
             })
         } else {
-            res.status(200).render('advance', {
-                message: 'Result of \'' + query + '\':',
-                columns: fields,
-                someData: rows
-            })
+            // if (typeof rows === 'object') {
+            //     res.status(200).render('advance', {
+            //         message: 'Query \'' + query + '\' successful',
+            //         columns: '',
+            //         someData: ''
+            //     })
+            // } else {
+                res.status(200).render('advance', {
+                    message: 'Result of \'' + query + '\':',
+                    columns: fields,
+                    someData: rows
+                })
+            // }
         }
     })
 })
@@ -336,6 +533,10 @@ app.get('/about', (req, res) => {
         else console.log(rows)
     })
     res.status(200).send('<p>You want to know about me?</p>')
+})
+
+app.get('/team', (req, res) => {
+    res.send('Do you really want to see the TEAM?')
 })
 
 app.listen(4000, () => {

@@ -7,7 +7,20 @@
 </head>
 <body>
 
-<div class="container_insert">
+<div class="container container_delete">
+
+    <nav>
+        <div class="logo">
+            <img src="/Images/Earth_moon.jpeg"/>
+        </div>
+
+        <ul class="list-item">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/team">Team</a></li>
+        </ul>
+    </nav>
+
     <div class="tables_list">
         <label for="tables">Delete from table :</label>
         <select id="tables" name="tableList" form="tableForm">
@@ -22,7 +35,9 @@
         </form>
     </div>
 
+
     <% if (temp.length !== 0) { %>
+<!--    <div>-->
         <h1>Enter the information below to delete : </h1>
         <div class="insert_form">
             <label for="insertForm"></label>
@@ -35,11 +50,12 @@
                         <input type="text" name='<%= columns[i].name%>' placeholder='<%=columns[i].name%>'>
                     <% } %>
                 <% } %>
-                <button type="submit">Submit</button>
+                <input type="submit" class="insert_form_submit">
             </form>
-
             <h3><%= error %></h3>
         </div>
+<!--        <div>-->
+
     <% } %>
 
 </div>

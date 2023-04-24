@@ -7,7 +7,19 @@
 </head>
 <body>
 
-<div class="container_insert">
+<div class="container">
+    <nav>
+        <div class="logo">
+            <img src="/Images/Earth_moon.jpeg"/>
+        </div>
+
+        <ul class="list-item">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/team">Team</a></li>
+        </ul>
+    </nav>
+
     <div class="tables_list">
         <label for="tables">Choose a table :</label>
         <select id="tables" name="tableList" form="tableForm">
@@ -18,7 +30,7 @@
             <option>Student</option>
         </select>
         <form method="post" action="/insert" id="tableForm">
-            <input type="submit">
+            <input type="submit" class="showBtn">
         </form>
     </div>
 
@@ -26,16 +38,30 @@
     <h1>Enter the <%= temp %> information below</h1>
     <div class="insert_form">
         <label for="insertForm"></label>
-        <form class="insertForm" action='<%= '/insert/table?name=' + temp%>'  method="POST">
+        <form class="insertForm" action='<%= '/insert/table?name=' + temp%>'  method="POST" id="insertForm">
             <% for (let i = 0; i < columns.length; i ++) { %>
+            <div>
                 <label for='<%= columns[i].name%>'></label>
                 <% if (columns[i].name === 'DOB') { %>
                     <input type="date" name='<%= columns[i].name%>' placeholder='<%=columns[i].name%>'>
+                <%} else if (columns[i].name === 'Sex') {  %>
+                    <label for="genderSelect"></label>
+                    <select id="genderSelect" name='<%= columns[i].name%>' form="insertForm">
+                        <option>Sex</option>
+                        <option>M</option>
+                        <option>F</option>
+                        <option>T</option>
+                    </select>
                 <% } else { %>
                     <input type="text" name='<%= columns[i].name%>' placeholder='<%=columns[i].name%>'>
                 <% } %>
+            </div>
+<!--            <br>-->
             <% } %>
-                <button type="submit">Submit</button>
+<!--                <br>-->
+                <div class="insert_btn">
+                    <input type="submit" class="insert_form_submit">
+                </div>
         </form>
     </div>
     <% } %>
