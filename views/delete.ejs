@@ -11,7 +11,7 @@
 
     <nav>
         <div class="logo">
-            <img src="/Images/Earth_moon.jpeg"/>
+            <img src="/Images/i_icon.png"/>
         </div>
 
         <ul class="list-item">
@@ -25,10 +25,18 @@
         <label for="tables">Delete from table :</label>
         <select id="tables" name="tableList" form="tableForm">
             <option>Course</option>
+            <option>Credit_Combination
             <option>Department</option>
-            <option>Staff</option>
+            <option>Faculty</option>
             <option>Inventory</option>
+            <option>Non_Teaching_Staff</option>
+            <option>Staff</option>
+            <option>Staff_Qualification</option>
             <option>Student</option>
+            <option>Student_Contact_No</option>
+            <option>Student_SPI</option>
+            <option>Studies</option>
+            <option>Teaches</option>
         </select>
         <form method="post" action="/delete" id="tableForm">
             <input type="submit">
@@ -38,9 +46,8 @@
 
     <% if (temp.length !== 0) { %>
 <!--    <div>-->
-        <h1>Enter the information below to delete : </h1>
         <div class="insert_form">
-            <label for="insertForm"></label>
+            <label for="insertForm">Delete what?</label>
             <form class="insertForm" action='<%= '/delete/table?name=' + temp%>'  method="POST">
                 <% for (let i = 0; i < columns.length; i ++) { %>
                     <label for='<%= columns[i].name%>'></label>

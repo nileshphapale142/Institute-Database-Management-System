@@ -13,10 +13,10 @@
 }
 
 body {
-    /*background-image: url('/Images/black_planet.jpg');*/
-    /*background-size: cover;*/
-    /*background-repeat: no-repeat;*/
-    background-color: grey;
+    background-image: url('/Images/b.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    /*background-color: grey;*/
 }
 
 header {
@@ -115,13 +115,13 @@ nav {
     color: black;
     margin: auto;
     border-radius: 5px;
-    padding: 15px 25px 15px 25px;
+    padding: 25px 35px;
     transition: all .2s ease-in-out;
     z-index: 1;
 }
 
 .option_set_1 * a:hover , .option_set_2 * a:hover {
-    padding: 30px 50px;
+    padding: 40px 60px;
     z-index: 1024;
     background-color: skyblue;
     font-size: 30px;
@@ -230,6 +230,12 @@ nav {
     background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
 }
 
+/*--------------->insert.ejs<-----------------*/
+
+.container_insert h1 {
+    margin: 1% auto;
+}
+
 /*--------------->delete.ejs<----------------*/
 
 .container_delete h1 {
@@ -265,10 +271,6 @@ nav {
     margin: 0.5% auto;
 }
 
-.container_update .update_attr_select {
-
-}
-
 .tables_list_col form input:not(.update_button, input[type="submit"]){
     width: 100%;
     min-width: 15ch;
@@ -280,6 +282,113 @@ nav {
     line-height: 1.1;
     background-color: #fff;
     background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
+}
+
+/*----------------->about.html<------------------*/
+
+.container_about h1 {
+    margin: 1% auto;
+}
+
+.container_about .tableInfo table tr td {
+    text-align: left;
+}
+
+.container_about .tableInfo table tr th {
+    text-align: center;
+}
+
+
+
+/*---------------->teams.html<----------------*/
+
+.section-team {
+    font-family: "Poppins", sans-serif;
+    padding: 80px 0;
+}
+
+.section-team .header-section {
+    margin-bottom: 50px;
+}
+
+.section-team .header-section .small-title {
+    margin-bottom: 25px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #3e64ff;
+}
+
+.section-team .header-section .title {
+    font-weight: 700;
+    font-size: 45px;
+}
+
+.section-team .single-person {
+    margin-top: 30px;
+    padding: 30px;
+    background-color: #f6f9ff;
+    border-radius: 5px;
+}
+
+.section-team .single-person:hover {
+    background: linear-gradient(to right, #016cec, #00b5f7);
+}
+
+.section-team .single-person .person-image {
+    position: relative;
+    margin-bottom: 50px;
+    border-radius: 50%;
+    border: 4px dashed transparent;
+    transition: padding .3s;
+}
+
+.section-team .single-person:hover .person-image {
+    padding: 12px;
+    border: 4px dashed #fff;
+}
+
+.section-team .single-person .person-image img {
+    width: 100%;
+    border-radius: 50%;
+}
+
+.section-team .single-person .person-image .icon {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%,50%);
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    background: linear-gradient(to right, #016cec, #00b5f7);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 24px;
+}
+
+.section-team .single-person:hover .person-image .icon {
+    background: none;
+    background-color: #fff;
+    color: #016cec;
+}
+
+.section-team .single-person .person-info .full-name {
+    margin-bottom: 10px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.section-team .single-person .person-info .speciality {
+    text-transform: uppercase;
+    font-size: 14px;
+    color: #016cec;
+}
+
+.section-team .single-person:hover .full-name,
+.section-team .single-person:hover .speciality {
+    color: #fff;
 }
 
 

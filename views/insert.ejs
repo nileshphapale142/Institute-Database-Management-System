@@ -7,10 +7,10 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container container_insert">
     <nav>
         <div class="logo">
-            <img src="/Images/Earth_moon.jpeg"/>
+            <img src="/Images/i_icon.png"/>
         </div>
 
         <ul class="list-item">
@@ -24,10 +24,18 @@
         <label for="tables">Choose a table :</label>
         <select id="tables" name="tableList" form="tableForm">
             <option>Course</option>
+            <option>Credit_Combination
             <option>Department</option>
-            <option>Staff</option>
+            <option>Faculty</option>
             <option>Inventory</option>
+            <option>Non_Teaching_Staff</option>
+            <option>Staff</option>
+            <option>Staff_Qualification</option>
             <option>Student</option>
+            <option>Student_Contact_No</option>
+            <option>Student_SPI</option>
+            <option>Studies</option>
+            <option>Teaches</option>
         </select>
         <form method="post" action="/insert" id="tableForm">
             <input type="submit" class="showBtn">
@@ -42,7 +50,7 @@
             <% for (let i = 0; i < columns.length; i ++) { %>
             <div>
                 <label for='<%= columns[i].name%>'></label>
-                <% if (columns[i].name === 'DOB') { %>
+                <% if (columns[i].name === 'DOB' || columns[i].name.toLowerCase() === 'purchase_data') { %>
                     <input type="date" name='<%= columns[i].name%>' placeholder='<%=columns[i].name%>'>
                 <%} else if (columns[i].name === 'Sex') {  %>
                     <label for="genderSelect"></label>

@@ -26,20 +26,20 @@ const connection = mysql.createConnection({
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 
 app.use(session({
     secret: '123456catr',
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 60000 }
+    cookie: {maxAge: 60000}
 }))
 
 app.use(flash());
 
 app.set('views', path.join(__dirname, 'views'))
-app.set('view engine','ejs')
+app.set('view engine', 'ejs')
 
 app.use(express.static(path.join(__dirname, 'public')))
 
@@ -94,16 +94,14 @@ app.post('/insert/table', async (req, res) => {
 
         let insertArray = []
 
-        for (let i = 0; i < rows.length; i ++) {
+        for (let i = 0; i < rows.length; i++) {
             const type = rows[i].Type.toString().slice(0, 3).toString()
             if (type === 'int') {
                 if (isNaN(parseInt(tuple[rows[i].Field]))) {
                     insertArray.push(null)
-                }
-                else
+                } else
                     insertArray.push(parseInt(tuple[rows[i].Field]))
-            }
-            else if (type === 'dec') {
+            } else if (type === 'dec') {
                 if (isNaN(parseFloat(tuple[rows[i].Field])))
                     insertArray.push(null)
                 else
@@ -113,8 +111,7 @@ app.post('/insert/table', async (req, res) => {
                     insertArray.push(null)
                 else
                     insertArray.push(tuple[rows[i].Field])
-            }
-            else insertArray.push(tuple[rows[i].Field])
+            } else insertArray.push(tuple[rows[i].Field])
         }
 
 
@@ -127,19 +124,18 @@ app.post('/insert/table', async (req, res) => {
 
                 if (errorMsg[0] === 'ER_DUP_ENTRY:') {
                     let msg = errorMsg[1] + ' ' + errorMsg[2] + ' ' + errorMsg[3]
-                    for (let i = 4; i < errorMsg.length; i ++) {
-                        if(errorMsg[i] === 'for') break;
+                    for (let i = 4; i < errorMsg.length; i++) {
+                        if (errorMsg[i] === 'for') break;
                         msg += ' ' + errorMsg[i]
                     }
                     res.status(200).send(msg)
-                }
-                else res.status(200).send('Error 404: Problem while inserting data!')
+                } else res.status(200).send('Error 404: Problem while inserting data!')
             } else {
                 connection.query('select * from ' + table, (er, row, col) => {
                     let no = -1
                     console.log(row)
                     console.log(insertArray)
-                    for (let i = 0; i < row.length; i ++) {
+                    for (let i = 0; i < row.length; i++) {
                         let j = 0;
                         let found = true
                         for (let info in row[i]) {
@@ -154,7 +150,7 @@ app.post('/insert/table', async (req, res) => {
                                 found = false
                                 break
                             }
-                            j ++
+                            j++
                         }
                         if (found) {
                             no = i
@@ -178,7 +174,7 @@ app.get('/update', (req, res) => {
     res.status(200).render('update', {
         temp: '',
         attribute: '',
-        column:''
+        column: ''
     })
 })
 
@@ -190,12 +186,12 @@ app.post('/update', (req, res) => {
         if (err) throw err
         let primaryKeys = []
         let nonPrimaryKeys = []
-        for (let i = 0; i < rows.length; i ++) {
-            if (rows[i].Key === 'PRI'){
+        for (let i = 0; i < rows.length; i++) {
+            if (rows[i].Key === 'PRI') {
                 primaryKeys.push({
                     name: rows[i].Field
                 })
-            }else{
+            } else {
                 nonPrimaryKeys.push({
                     name: rows[i].Field
                 })
@@ -205,7 +201,7 @@ app.post('/update', (req, res) => {
             temp: table,
             columns: nonPrimaryKeys,
             column: primaryKeys,
-            attribute:''
+            attribute: ''
         })
     })
 })
@@ -214,18 +210,18 @@ app.post('/update', (req, res) => {
 app.post('/update/table', (req, res) => {
     const table = req.query.name;
     const tables_col = req.query.attr;
-    const {value , attr} = req.body;
+    const {value, attr} = req.body;
 
-    if(tables_col === ''){
+    if (tables_col === '') {
         connection.query('desc ' + table, (err, rows, fields) => {
             let primaryKeys = []
             let nonPrimaryKeys = []
-            for (let i = 0; i < rows.length; i ++) {
-                if (rows[i].Key === 'PRI'){
+            for (let i = 0; i < rows.length; i++) {
+                if (rows[i].Key === 'PRI') {
                     primaryKeys.push({
                         name: rows[i].Field
                     })
-                }else{
+                } else {
                     nonPrimaryKeys.push({
                         name: rows[i].Field
                     })
@@ -238,7 +234,7 @@ app.post('/update/table', (req, res) => {
                 attribute: attr
             })
         })
-    }else{
+    } else {
 
         const temp = req.body;
 
@@ -262,7 +258,7 @@ app.post('/update/table', (req, res) => {
                 console.log(err);
                 res.send('An error occurred while updating')
             } else {
-                    console.log('record is updated');
+                console.log('record is updated');
 
                 connection.query('select * from ' + table, (er, rows, fields) => {
                     let no = -1
@@ -310,7 +306,7 @@ app.post('/delete', (req, res) => {
         if (err) res.send('Error 404: Error while deleting')
         else {
             let primaryKeys = []
-            for (let i = 0; i < rows.length; i ++) {
+            for (let i = 0; i < rows.length; i++) {
                 if (rows[i].Key === 'PRI')
                     primaryKeys.push({
                         name: rows[i].Field
@@ -348,8 +344,7 @@ app.post('/delete/table', (req, res) => {
             res.status(200).render('delete', {
                 error: 'Some error occurred while deleting'
             })
-        }
-        else res.redirect('/see/query?tablelist=' + table)
+        } else res.redirect('/see/query?tablelist=' + table)
     })
 })
 
@@ -409,14 +404,17 @@ app.post('/search/table', (req, res) => {
 
         connection.query(query, (err, rows, fields) => {
             if (err) res.send('Some error')
-            else if(isEmpty(rows)) {
+            else if (isEmpty(rows)) {
                 res.status(200).render('search', {
                     temp: '',
                     columns: '',
                     attribute: '',
                     message: 'Nothing found',
                     attrs: '',
-                    someData: ''
+                    someData: '',
+                    name: table,
+                    searchAttribute: qAttr,
+                    searchValue: value
                 })
             } else {
                 res.status(200).render('search', {
@@ -428,7 +426,7 @@ app.post('/search/table', (req, res) => {
                     someData: rows,
                     name: table,
                     searchAttribute: qAttr,
-                    searchValue:value
+                    searchValue: value
                 })
             }
         })
@@ -438,7 +436,7 @@ app.post('/search/table', (req, res) => {
 app.post('/search/sort', (req, res) => {
     const {table, attr, value} = req.query
     // console.log(req.query)
-    connection.query('select * from ' + table + ' where ' + attr + ' = \'' + value + '\''  + ' order by ' + req.body.sortBy + ' ' + req.body.sortByOrder, (err, rows, fields) => {
+    connection.query('select * from ' + table + ' where ' + attr + ' = \'' + value + '\'' + ' order by ' + req.body.sortBy + ' ' + req.body.sortByOrder, (err, rows, fields) => {
         if (err) throw err
         res.status(200).render('search', {
             temp: '',
@@ -449,7 +447,7 @@ app.post('/search/sort', (req, res) => {
             someData: rows,
             name: table,
             searchAttribute: attr,
-            searchValue:value,
+            searchValue: value,
             highlightNo: -1
         })
     })
@@ -502,6 +500,8 @@ app.get('/advance', (req, res) => {
 
 app.get('/advance/sql', (req, res) => {
     const query = req.query.sqlQuery
+    let operations = {update: 'update', delete: 'delete', insert: 'insert'}
+
     connection.query(query, (err, rows, fields) => {
         if (err) {
             res.status(200).render('advance', {
@@ -509,34 +509,29 @@ app.get('/advance/sql', (req, res) => {
                 columns: '',
                 someData: ''
             })
+        } else if (query.toString().split(' ')[0].toLowerCase() in operations) {
+            console.log('HIi')
+            res.status(200).render('advance', {
+                message: 'Query \'' + query + '\' successful',
+                columns: '',
+                someData: ''
+            })
         } else {
-            // if (typeof rows === 'object') {
-            //     res.status(200).render('advance', {
-            //         message: 'Query \'' + query + '\' successful',
-            //         columns: '',
-            //         someData: ''
-            //     })
-            // } else {
-                res.status(200).render('advance', {
-                    message: 'Result of \'' + query + '\':',
-                    columns: fields,
-                    someData: rows
-                })
-            // }
+            res.status(200).render('advance', {
+                message: 'Result of \'' + query + '\':',
+                columns: fields,
+                someData: rows
+            })
         }
     })
 })
 
 app.get('/about', (req, res) => {
-    connection.query('desc student', (err, rows, fields) => {
-        if (err) console.log("Some error")
-        else console.log(rows)
-    })
-    res.status(200).send('<p>You want to know about me?</p>')
+    res.status(200).sendFile(path.resolve(__dirname, './public/about.html'))
 })
 
 app.get('/team', (req, res) => {
-    res.send('Do you really want to see the TEAM?')
+    res.status(200).sendFile(path.resolve(__dirname, './public/teams.html'))
 })
 
 app.listen(4000, () => {
